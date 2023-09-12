@@ -1,0 +1,67 @@
+{% set version = "3.07.1" %}  # [linux]
+{% set version = "3.12.0" %}  # [osx]
+{% set version = "3.11" %}  # [win]
+
+{% set urlbase = "https://www.sdrplay.com/software/" %}
+
+package:
+  name: sdrplay_api
+  version: {{ version }}
+
+source:
+  url: {{ urlbase }}SDRplay_RSP_API-Linux-{{ version }}.run  # [linux64]
+  sha256: aefe8733cba3e480157c28439c1ed5ab757724a7a26fe74eee92cda6f36145a8  # [linux64]
+
+  url: {{ urlbase }}SDRplay_RSP_API-ARM64-{{ version }}.run  # [aarch64]
+  sha256: 1893c55ba5bc29ee269dccdc48b1587e2a0e30609f167dbf108034ed59e65466  # [aarch64]
+
+  url: {{ urlbase }}SDRplayAPI-macos-installer-universal-{{ version }}.pkg  # [osx]
+  sha256: 964f39158db2624f5b88cbe2407a4613841eba2c981312eed106a4dfcb1d60fc  # [osx]
+
+  url: {{ urlbase }}SDRplay_RSP_API-Windows-{{ version }}.exe  # [win]
+  sha256: e76a76ed7281485e2680e590ff6fd48f0d75b73b690198d7f6df284ebc613477  # [win]
+  fn: sdrplay_api.exe  # [win]
+
+  no_hoist: true
+  folder: binary
+
+build:
+  number: 0
+  detect_binary_files_with_prefix: false
+
+requirements:
+  build:
+    - {{ compiler('cxx') }}
+    - 7zip  # [win]
+    - cmake
+    - p7zip  # [unix]
+  host:
+    - libudev  # [linux64]
+    - libusb
+
+test:
+  commands:
+    # verify that libraries get installed
+    - test -f $PREFIX/lib/libsdrplay_api.so  # [unix]
+    - if not exist %PREFIX%\\Library\\bin\\sdrplay_api.dll exit 1  # [win]
+    - if not exist %PREFIX%\\Library\\lib\\sdrplay_api.lib exit 1  # [win]
+
+    # verify that headers get installed
+    - test -f $PREFIX/include/sdrplay_api.h  # [unix]
+    - if not exist %PREFIX%\\Library\\include\\sdrplay_api.h exit 1  # [win]
+
+about:
+  home: https://www.sdrplay.com/api/
+  license: LicenseRef-SDRplay-End-User-License-Agreement
+  license_file: SDRplay_EULA
+  summary: 'Redistribution of the SDRplay API binaries'
+  description: |
+    The SDRplay API binaries, redistributed here for use in building dependent
+    software within the conda ecosystem. The copyright to these files is owned
+    by SDRplay, and redistribution and use are governed by the included license.
+    To quote the license:
+    > "By proceeding to install, run and/or use the [SDRplay software], you confirm that you accept and agree to be bound by the terms of this Licence. If you do not agree to any of the terms of this Licence, SDRplay is unwilling to provide access to the [SDRplay software] to you and you should not proceed further and may not use the [SDRplay software]."
+
+extra:
+  recipe-maintainers:
+    - ryanvolz

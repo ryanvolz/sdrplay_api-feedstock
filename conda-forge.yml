@@ -1,0 +1,10 @@
+build_platform:
+  linux_aarch64: linux_64
+  osx_arm64: osx_64
+github_actions:
+  store_build_artifacts: true
+provider:
+  linux: github_actions
+  osx: github_actions
+  win: github_actions
+test: native_and_emulated
