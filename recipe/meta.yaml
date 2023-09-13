@@ -1,6 +1,4 @@
-{% set version = "3.07.1" %}  # [linux]
-{% set version = "3.12.0" %}  # [osx]
-{% set version = "3.11" %}  # [win]
+{% set version = SDRPLAY_API_VERSION %}
 
 {% set urlbase = "https://www.sdrplay.com/software/" %}
 
@@ -27,40 +25,55 @@ source:
 
 build:
   number: 0
-  detect_binary_files_with_prefix: false
+  run_exports:
+    weak_constrains:
+      - {{ pin_subpackage('sdrplay_api', exact=True) }}
 
 requirements:
   build:
     - {{ compiler('cxx') }}
-    - 7zip  # [win]
-    - cmake
-    - p7zip  # [unix]
+    - m2-sed  # [win]
+    - sed  # [not win]
   host:
     - libudev  # [linux64]
     - libusb
+  run:
+    - curl *
+    - p7zip  # [unix]
 
 test:
   commands:
     # verify that libraries get installed
-    - test -f $PREFIX/lib/libsdrplay_api.so  # [unix]
-    - if not exist %PREFIX%\\Library\\bin\\sdrplay_api.dll exit 1  # [win]
-    - if not exist %PREFIX%\\Library\\lib\\sdrplay_api.lib exit 1  # [win]
+    - test -f $SDRPLAY_PREFIX/lib/libsdrplay_api.so  # [unix]
+    - if not exist %SDRPLAY_PREFIX%\\bin\\sdrplay_api.dll exit 1  # [win]
+    - if not exist %SDRPLAY_PREFIX%\\lib\\sdrplay_api.lib exit 1  # [win]
 
     # verify that headers get installed
-    - test -f $PREFIX/include/sdrplay_api.h  # [unix]
-    - if not exist %PREFIX%\\Library\\include\\sdrplay_api.h exit 1  # [win]
+    - test -f $SDRPLAY_PREFIX/include/sdrplay_api.h  # [unix]
+    - if not exist %SDRPLAY_PREFIX%\\include\\sdrplay_api.h exit 1  # [win]
 
 about:
   home: https://www.sdrplay.com/api/
   license: LicenseRef-SDRplay-End-User-License-Agreement
   license_file: SDRplay_EULA
-  summary: 'Redistribution of the SDRplay API binaries'
-  description: |
-    The SDRplay API binaries, redistributed here for use in building dependent
-    software within the conda ecosystem. The copyright to these files is owned
-    by SDRplay, and redistribution and use are governed by the included license.
-    To quote the license:
-    > "By proceeding to install, run and/or use the [SDRplay software], you confirm that you accept and agree to be bound by the terms of this Licence. If you do not agree to any of the terms of this Licence, SDRplay is unwilling to provide access to the [SDRplay software] to you and you should not proceed further and may not use the [SDRplay software]."
+  summary: 'Script for downloading the SDRplay API binaries'
+  description: >
+    This package contains a conda activation script that will download the SDRplay API binaries to a local directory under a specified path.
+
+    To use this package in a normal conda environment, do the following:
+
+        export CONDA_BUILD_SDRPLAY_API=/opt
+
+    (or use another suitable path instead of `/opt`).
+
+    To use this package in a conda-build environment, add the following to the `conda_build_config.yaml` file in your user's HOME directory, the current working directory, or in the same folder as the recipe's `meta.yaml` file:
+
+        CONDA_BUILD_SDRPLAY_API:
+          - "/opt"
+
+    (or use another suitable path instead of `/opt`).
+
+    By setting this variable, you are agreeing to the terms and conditions of the SDRplay end user license agreement. For reference, this license is included in the package and installed to `$CONDA_PREFIX/share/doc/sdrplay_api/copyright`.
 
 extra:
   recipe-maintainers:

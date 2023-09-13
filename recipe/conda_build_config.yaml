@@ -1,2 +1,18 @@
 channel_targets:
   - ryanvolz main
+
+zip_keys:
+  -
+    - SDRPLAY_API_VERSION
+    - SDRPLAY_API_URL
+
+SDRPLAY_API_VERSION:
+  - "3.07.1"  # [linux]
+  - "3.12.0"  # [osx]
+  - "3.11"  # [win]
+
+SDRPLAY_API_URL:
+  - https://www.sdrplay.com/software/SDRplay_RSP_API-Linux-3.07.1.run  # [linux64]
+  - https://www.sdrplay.com/software/SDRplay_RSP_API-ARM64-3.07.1.run  # [aarch64]
+  - https://www.sdrplay.com/software/SDRplayAPI-macos-installer-universal-3.12.0.pkg  # [osx]
+  - https://www.sdrplay.com/software/SDRplay_RSP_API-Windows-3.11.exe  # [win]
