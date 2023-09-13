@@ -1,3 +1,7 @@
+SDRPLAY_API_URL:
+- https://www.sdrplay.com/software/SDRplay_RSP_API-Windows-3.11.exe
+SDRPLAY_API_VERSION:
+- '3.11'
 channel_sources:
 - conda-forge
 channel_targets:
@@ -6,3 +10,6 @@ cxx_compiler:
 - vs2019
 target_platform:
 - win-64
+zip_keys:
+- - SDRPLAY_API_VERSION
+  - SDRPLAY_API_URL

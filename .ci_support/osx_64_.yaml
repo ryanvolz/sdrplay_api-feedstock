@@ -1,5 +1,9 @@
 MACOSX_DEPLOYMENT_TARGET:
 - '10.9'
+SDRPLAY_API_URL:
+- https://www.sdrplay.com/software/SDRplayAPI-macos-installer-universal-3.12.0.pkg
+SDRPLAY_API_VERSION:
+- 3.12.0
 channel_sources:
 - conda-forge
 channel_targets:
@@ -12,3 +16,6 @@ macos_machine:
 - x86_64-apple-darwin13.4.0
 target_platform:
 - osx-64
+zip_keys:
+- - SDRPLAY_API_VERSION
+  - SDRPLAY_API_URL

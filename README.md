@@ -7,13 +7,21 @@ Home: https://www.sdrplay.com/api/
 
 Package license: LicenseRef-SDRplay-End-User-License-Agreement
 
-Summary: Redistribution of the SDRplay API binaries
+Summary: Script for downloading the SDRplay API binaries
 
-The SDRplay API binaries, redistributed here for use in building dependent
-software within the conda ecosystem. The copyright to these files is owned
-by SDRplay, and redistribution and use are governed by the included license.
-To quote the license:
-> "By proceeding to install, run and/or use the [SDRplay software], you confirm that you accept and agree to be bound by the terms of this Licence. If you do not agree to any of the terms of this Licence, SDRplay is unwilling to provide access to the [SDRplay software] to you and you should not proceed further and may not use the [SDRplay software]."
+This package contains a conda activation script that will download the SDRplay API binaries to a local directory under a specified path.
+To use this package in a normal conda environment, do the following:
+
+    export CONDA_BUILD_SDRPLAY_API=/opt
+
+(or use another suitable path instead of `/opt`).
+To use this package in a conda-build environment, add the following to the `conda_build_config.yaml` file in your user's HOME directory, the current working directory, or in the same folder as the recipe's `meta.yaml` file:
+
+    CONDA_BUILD_SDRPLAY_API:
+      - "/opt"
+
+(or use another suitable path instead of `/opt`).
+By setting this variable, you are agreeing to the terms and conditions of the SDRplay end user license agreement. For reference, this license is included in the package and installed to `$CONDA_PREFIX/share/doc/sdrplay_api/copyright`.
 
 
 Current build status
