@@ -73,11 +73,13 @@ if [[ ! -d "${SDRPLAY_PREFIX}" ]]; then
           # strip universal binaries down to the specific architecture
           pushd lib > /dev/null
             libname="$(ls libsdrplay_api.so*)"
-            libname_arch="${libname%%.*}_${arch}.${libname#*.}"
-            # fix library name to match internal name, stripping the last version part of 3
-            libname_arch="${libname_arch%.*}"
             mv "$libname" "$libname.orig"
-            lipo -thin $arch -output "$libname_arch" "$libname.orig"
+            lipo -thin $arch -output "$libname" "$libname.orig"
+            # change library's install name so it uses an rpath and is findable
+            # under an installed name that the sdrplay installer uses
+            # (use *.so.3 instead of *.so.3.12 because installer does not
+            #  provide the latter even though it should)
+            install_name_tool -id "@rpath/libsdrplay_api.so.3" "$libname"
           popd > /dev/null
 
           pushd bin > /dev/null
@@ -91,9 +93,9 @@ if [[ ! -d "${SDRPLAY_PREFIX}" ]]; then
           mv "bin/sdrplay_apiService" "$SDRPLAY_PREFIX/bin/"
           mv "inc" "$SDRPLAY_PREFIX/include"
           mkdir -p "$SDRPLAY_PREFIX/lib"
-          mv "lib/$libname_arch" "$SDRPLAY_PREFIX/lib/"
+          mv "lib/$libname" "$SDRPLAY_PREFIX/lib/"
           pushd "$SDRPLAY_PREFIX/lib" > /dev/null
-            ln -s "$libname_arch" "$libname"
+            ln -s "$libname" "${libname%.*}"
             ln -s "$libname" "libsdrplay_api.so.3"
             ln -s "libsdrplay_api.so.3" "libsdrplay_api.so"
             ln -s "libsdrplay_api.so" "libsdrplay_api.dylib"

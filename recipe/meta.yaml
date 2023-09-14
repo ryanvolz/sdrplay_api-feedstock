@@ -27,7 +27,7 @@ build:
   number: 0
   run_exports:
     weak_constrains:
-      - {{ pin_subpackage('sdrplay_api', exact=True) }}
+      - {{ pin_subpackage('sdrplay_api', max_pin='x.x') }}
 
 requirements:
   build:
